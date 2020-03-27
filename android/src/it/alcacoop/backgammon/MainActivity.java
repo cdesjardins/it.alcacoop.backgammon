@@ -173,7 +173,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   }
 
   @Override
-  public String getDataDir() {
+  public String getDataDirStr() {
     return androidHelpers.getDataDir();
   }
 

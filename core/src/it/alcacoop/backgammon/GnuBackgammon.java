@@ -219,7 +219,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
 
     commandDispatcher = new CommandDispatcherImpl();
 
-    fname = nativeFunctions.getDataDir() + "/data/match.";
+    fname = nativeFunctions.getDataDirStr() + "/data/match.";
 
     GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal(GnuBackgammon.Instance.getResName() + "/pos.json"));
     skin = new Skin(Gdx.files.internal(resname[ss] + "/myskin.json"));

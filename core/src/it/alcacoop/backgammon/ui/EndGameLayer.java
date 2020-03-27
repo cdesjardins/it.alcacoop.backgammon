@@ -167,7 +167,7 @@ public class EndGameLayer extends Table {
     pl0.setWidth(stage.getWidth());
     pl0.add(_l0).expandX();
     pl0.row();
-    Texture t = new Texture(Gdx.files.absolute(GnuBackgammon.Instance.nativeFunctions.getDataDir() + "iconMe.png"));
+    Texture t = new Texture(Gdx.files.absolute(GnuBackgammon.Instance.nativeFunctions.getDataDirStr() + "iconMe.png"));
     t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
     pl0.add(new Image(t)).height(imgDim).width(imgDim);
     pl0.row();
@@ -177,7 +177,7 @@ public class EndGameLayer extends Table {
     pl1.setWidth(stage.getWidth());
     pl1.add(_l1).expandX();
     pl1.row();
-    t = new Texture(Gdx.files.absolute(GnuBackgammon.Instance.nativeFunctions.getDataDir() + "iconOpponent.png"));
+    t = new Texture(Gdx.files.absolute(GnuBackgammon.Instance.nativeFunctions.getDataDirStr() + "iconOpponent.png"));
     t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
     pl1.add(new Image(t)).height(imgDim).width(imgDim);
     pl1.row();
