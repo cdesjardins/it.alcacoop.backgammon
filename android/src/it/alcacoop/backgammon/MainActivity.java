@@ -65,13 +65,11 @@ import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards.SubmitScoreResult;
 import com.google.android.gms.games.leaderboard.ScoreSubmissionData.Result;
-import com.smartclip.helpers.SmartClipHelper;
 
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.gservice.GServiceApplication;
 import it.alcacoop.backgammon.gservice.GServiceClient;
-import it.alcacoop.backgammon.helpers.ADSHelpers;
 import it.alcacoop.backgammon.helpers.AccelerometerHelpers;
 import it.alcacoop.backgammon.helpers.AndroidHelpers;
 import it.alcacoop.backgammon.layers.GameScreen;
@@ -92,8 +90,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   private View gameView;
 
   private AndroidHelpers androidHelpers;
-  private ADSHelpers adsHelpers;
-  private SmartClipHelper scHelper;
   private AccelerometerHelpers accelerometerHelpers;
 
   private ImageManager imgMgr;
@@ -115,24 +111,17 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     PrivateDataManager.createBillingData(this);
     androidHelpers = new AndroidHelpers(this);
     accelerometerHelpers = new AccelerometerHelpers(this);
-    adsHelpers = new ADSHelpers(this, androidHelpers.isTablet());
 
     RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
     adParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
     layout.addView(gameView);
 
-    View adv = adsHelpers.getAdView();
-    if (adv != null)
-      layout.addView(adv, adParams);
-
     LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     chatBox = inflater.inflate(R.layout.chat_box, null);
     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     chatBox.setVisibility(View.GONE);
     layout.addView(chatBox, params);
-
-    scHelper = new SmartClipHelper(this);
 
     setContentView(layout);
 
@@ -158,12 +147,9 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     imgMgr = ImageManager.create(getApplicationContext());
   }
 
-
   @Override
   public void showAds(final boolean show) {
-    adsHelpers.showAds(show);
   }
-
 
   @Override
   public void openURL(String... urls) {
@@ -479,13 +465,11 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   protected void onResume() {
     super.onResume();
     accelerometerHelpers.onResume();
-    adsHelpers.onResume();
     enterImmersiveMode();
   }
 
   @Override
   protected void onPause() {
-    adsHelpers.onPause();
     accelerometerHelpers.onPause();
     super.onPause();
   }
@@ -495,10 +479,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   public void showInterstitial() {
     if (!isNetworkUp())
       return;
-    if (scHelper.hasClipAvailable())
-      scHelper.playClip();
-    else
-      adsHelpers.showInterstitial();
   }
 
 
@@ -519,7 +499,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   protected void onDestroy() {
-    adsHelpers.onDestroy();
     PrivateDataManager.destroyBillingData();
     super.onDestroy();
   }
@@ -560,7 +539,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     switch (requestCode) {
       case PrivateDataManager.INAPP_BILLING_REQUEST: // RETURN FROM IN APP BILLING
         if (resultCode != 10000) {
-          adsHelpers.disableAllAds();
           GnuBackgammon.Instance.menuScreen.redraw();
         } else { // ERROR!
           PrivateDataManager.destroyBillingData();
