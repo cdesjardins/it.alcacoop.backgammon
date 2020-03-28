@@ -189,7 +189,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     transitionTimer = new Timer();
 
     if (!skipSplashScreen) {
-      setScreen(new SplashScreen(resname[ss] + "/alca.png"));
+      setScreen(new SplashScreen(resname[ss] + "/cjd.png"));
     } else {
       GnuBackgammon.Instance.nativeFunctions.initEngine();
       GnuBackgammon.Instance.initAssets();
