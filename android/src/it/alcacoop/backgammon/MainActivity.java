@@ -668,9 +668,9 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   public void beginGoogleSignIn() {
-    gHelper.setConnectOnStart(prefs.getBoolean("WANTS_GOOGLE_SIGNIN", true));
-    gHelper.onStart(this);
-    enterImmersiveMode();
+    //gHelper.setConnectOnStart(prefs.getBoolean("WANTS_GOOGLE_SIGNIN", true));
+    //gHelper.onStart(this);
+    //enterImmersiveMode();
   }
 
 
