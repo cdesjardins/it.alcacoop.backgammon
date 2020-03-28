@@ -221,7 +221,7 @@ public class Dices extends Group {
     
     Gdx.graphics.setContinuousRendering(true);
     addAction(MyActions.sequence(
-        Actions.delay(animDuration*(GnuBackgammon.Instance.optionPrefs.getString("SPEED", "Fast").equals("Fast")?1:2)),
+        Actions.delay(animDuration*(GnuBackgammon.Instance.optionPrefs.getString("SPEED", "Fast").equals("Fast")?0.5f:2)),
         Actions.run(new Runnable() {
           @Override
           public void run() {
