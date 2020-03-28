@@ -115,8 +115,8 @@ public class Dices extends Group {
 
     
     public void show() {
-      ((TemporalAction)act2).setDuration(animDuration*(GnuBackgammon.Instance.optionPrefs.getString("SPEED", "Fast").equals("Fast")?1:2));
-      ((DelayAction)act3).setDuration(1.5f*(GnuBackgammon.Instance.optionPrefs.getString("SPEED", "Fast").equals("Fast")?1:2));
+      ((TemporalAction)act2).setDuration(animDuration*(GnuBackgammon.Instance.optionPrefs.getFloat("SPEEDFACTOR", 0.5f)));
+      ((DelayAction)act3).setDuration((GnuBackgammon.Instance.optionPrefs.getFloat("SPEEDFACTOR", 0.5f)));
       float w = img.getWidth()+10;
       float x = 0;
       if (MatchState.fMove==0) 
@@ -221,7 +221,7 @@ public class Dices extends Group {
     
     Gdx.graphics.setContinuousRendering(true);
     addAction(MyActions.sequence(
-        Actions.delay(animDuration*(GnuBackgammon.Instance.optionPrefs.getString("SPEED", "Fast").equals("Fast")?0.5f:2)),
+        Actions.delay(animDuration*(GnuBackgammon.Instance.optionPrefs.getFloat("SPEEDFACTOR", 0.5f))),
         Actions.run(new Runnable() {
           @Override
           public void run() {

@@ -29,7 +29,7 @@ public class AppDataManager {
     app_data.put("tigaboard", GnuBackgammon.Instance.optionPrefs.getString("TIGABOARD", "0"));
 
     app_data.put("sound", GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes"));
-    app_data.put("speed", GnuBackgammon.Instance.optionPrefs.getString("SPEED", "Fast"));
+    app_data.put("speedfactor", String.valueOf(GnuBackgammon.Instance.optionPrefs.getFloat("SPEEDFACTOR", 0.5f)));
     app_data.put("amoves", GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap"));
     app_data.put("lmoves", GnuBackgammon.Instance.optionPrefs.getString("LMOVES", "Yes"));
     app_data.put("dicesg", GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS"));
@@ -86,7 +86,7 @@ public class AppDataManager {
     app_data.put("tigaboard", tiga + "");
 
     app_data.put("sound", hRemote.get("sound"));
-    app_data.put("speed", hRemote.get("speed"));
+    app_data.put("speedfactor", hRemote.get("speedfactor"));
     app_data.put("amoves", hRemote.get("amoves"));
     app_data.put("lmoves", hRemote.get("lmoves"));
     app_data.put("dicesg", hRemote.get("dicesg"));
@@ -129,7 +129,7 @@ public class AppDataManager {
     GnuBackgammon.Instance.optionPrefs.putString("FIBSBOARD2", app_data.get("fibsboard2"));
 
     GnuBackgammon.Instance.optionPrefs.putString("SOUND", app_data.get("sound"));
-    GnuBackgammon.Instance.optionPrefs.putString("SPEED", app_data.get("speed"));
+    GnuBackgammon.Instance.optionPrefs.putFloat("SPEEDFACTOR", Float.valueOf(app_data.get("speedfactor")));
     GnuBackgammon.Instance.optionPrefs.putString("AMOVES", app_data.get("amoves"));
     GnuBackgammon.Instance.optionPrefs.putString("LMOVES", app_data.get("lmoves"));
     GnuBackgammon.Instance.optionPrefs.putString("DICESG", app_data.get("dicesg"));

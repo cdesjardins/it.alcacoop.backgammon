@@ -50,14 +50,16 @@ import com.badlogic.gdx.utils.Array;
 
 public class GameOptionsTable extends Table {
 
-  private FixedButtonGroup speed;
   private FixedButtonGroup sound;
   private FixedButtonGroup automoves;
   private FixedButtonGroup lmoves;
   private FixedButtonGroup mdices;
   private FixedButtonGroup mgreedy;
-  private TextButton lm1, lm2, ok;
-
+  private TextButton lm1, lm2, ok, faster, slower;
+  private Label speedLabel;
+  private float speedSetting;
+  final private float maxSpeed = 1.0f;
+  final private float minSpeed = 0.0f;
 
   public GameOptionsTable(boolean decoration, ClickListener _cl) {
 
@@ -72,13 +74,37 @@ public class GameOptionsTable extends Table {
       }
     };
 
-    speed = new FixedButtonGroup();
-    TextButton sp1 = new TextButton("Fast", ts);
-    TextButton sp2 = new TextButton("Slow", ts);
-    speed.add(sp1);
-    speed.add(sp2);
-    sp1.addListener(cls);
-    sp2.addListener(cls);
+    ClickListener cspeedls = new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
+        if (event.getListenerActor() == faster)
+        {
+          speedSetting -= 0.05f;
+        }
+        else
+        {
+          speedSetting += 0.05f;
+        }
+        if (speedSetting > maxSpeed)
+        {
+          speedSetting = maxSpeed;
+        }
+        if (speedSetting < minSpeed)
+        {
+          speedSetting = minSpeed;
+        }
+        updateSpeedLabel();
+        savePrefs();
+        super.clicked(event, x, y);
+      }
+    };
+
+    faster = new TextButton("Faster", GnuBackgammon.skin);
+    slower = new TextButton("Slower", GnuBackgammon.skin);
+    speedLabel = new Label("", GnuBackgammon.skin);
+    faster.addListener(cspeedls);
+    slower.addListener(cspeedls);
 
     sound = new FixedButtonGroup();
     TextButton sn1 = new TextButton("Yes", ts);
@@ -178,8 +204,9 @@ public class GameOptionsTable extends Table {
     row().spaceBottom(height * 0.05f);
     add().fill().expandX();
     add(l).right().spaceRight(6);
-    add(sp1).height(height * 1.3f).width(width);
-    add(sp2).height(height * 1.3f).width(width);
+    add(faster).height(height * 1.3f).width(width);
+    add(slower).height(height * 1.3f).width(width);
+    add(speedLabel).height(height * 1.3f).width(width);
     add().fill().expandX();
 
 
@@ -229,8 +256,12 @@ public class GameOptionsTable extends Table {
     add().fill().expand().colspan(5);
 
     initFromPrefs();
+    updateSpeedLabel();
   }
 
+  private void updateSpeedLabel() {
+      speedLabel.setText(String.format("%.2f", maxSpeed - speedSetting));
+  }
   private void setDisabledLmoves(boolean disabled) {
     if (disabled) {
       lm1.setDisabled(true);
@@ -249,8 +280,7 @@ public class GameOptionsTable extends Table {
   public void initFromPrefs() {
     String sound = GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes");
     this.sound.setChecked(sound);
-    String speed = GnuBackgammon.Instance.optionPrefs.getString("SPEED", "Fast");
-    this.speed.setChecked(speed);
+    speedSetting = GnuBackgammon.Instance.optionPrefs.getFloat("SPEEDFACTOR", 0.5f);
     String automoves = GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap");
     this.automoves.setChecked(automoves);
 
@@ -271,8 +301,7 @@ public class GameOptionsTable extends Table {
   public void savePrefs() {
     String sound = ((TextButton)this.sound.getChecked()).getText().toString();
     GnuBackgammon.Instance.optionPrefs.putString("SOUND", sound);
-    String speed = ((TextButton)this.speed.getChecked()).getText().toString();
-    GnuBackgammon.Instance.optionPrefs.putString("SPEED", speed);
+    GnuBackgammon.Instance.optionPrefs.putFloat("SPEEDFACTOR", speedSetting);
     String amoves = ((TextButton)this.automoves.getChecked()).getText().toString();
     GnuBackgammon.Instance.optionPrefs.putString("AMOVES", amoves);
     String lmoves = ((TextButton)this.lmoves.getChecked()).getText().toString();
@@ -296,9 +325,9 @@ public class GameOptionsTable extends Table {
 
   public void setButtonsStyle(String b) {
     Array<Button> a;
-    a = speed.getButtons();
-    for (int i = 0; i < a.size; i++)
-      a.get(i).setStyle(GnuBackgammon.skin.get("toggle-" + b, TextButtonStyle.class));
+
+    faster.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
+    slower.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
     a = sound.getButtons();
     for (int i = 0; i < a.size; i++)
       a.get(i).setStyle(GnuBackgammon.skin.get("toggle-" + b, TextButtonStyle.class));

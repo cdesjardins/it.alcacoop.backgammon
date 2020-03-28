@@ -33,6 +33,7 @@
 
 package it.alcacoop.backgammon.logic;
 
+import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.actors.Checker;
 
@@ -87,7 +88,7 @@ public class Move {
     else b.bearedOff[color]--;
     int y = b._board[color][from]++;
     
-    c.reset(from, y, 0.2f);
+    c.reset(from, y, GnuBackgammon.Instance.optionPrefs.getFloat("SPEEDFACTOR", 0.5f));
     b.dices.enable(dice);
     b.availableMoves.dices.add(dice);
   }
