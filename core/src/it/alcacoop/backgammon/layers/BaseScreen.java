@@ -69,7 +69,9 @@ public class BaseScreen implements Screen {
     alcaBtn.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.nativeFunctions.openURL("market://search?q=pub:Alca Soc. Coop.");
+        GnuBackgammon.Instance.snd.playMoveStart();
+        GnuBackgammon.Instance.nativeFunctions.inAppBilling();
+        super.clicked(event, x, y);
       }
     });
 

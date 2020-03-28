@@ -59,9 +59,7 @@ public class MainMenuScreen extends BaseScreen {
 
   private Group g;
   private IconButton onePlayer, twoPlayers, options, appearance, howtoplay, about, rate, getpro, stats;
-  private ImageButton scoreboards, achievements, gplus, twitter, facebook;
   private Image logo;
-  private Table buttonGroup;
 
   public MainMenuScreen() {
     ClickListener cl = new ClickListener() {
@@ -118,9 +116,16 @@ public class MainMenuScreen extends BaseScreen {
       }
     });
     rate = new IconButton("Rate it!", GnuBackgammon.atlas.findRegion("str"), tl);
-    rate.addListener(cl);
+    rate.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
+        GnuBackgammon.Instance.nativeFunctions.inAppBilling();
+        super.clicked(event, x, y);
+      }
+    });
 
-    getpro = new IconButton("Remove Ads", GnuBackgammon.atlas.findRegion("pro"), tl);
+    getpro = new IconButton("Add free", GnuBackgammon.atlas.findRegion("pro"), tl);
     getpro.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -132,64 +137,6 @@ public class MainMenuScreen extends BaseScreen {
 
     g = new Group();
     g.setColor(1, 1, 1, 0);
-
-    scoreboards = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("leaderboards")));
-    scoreboards.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.snd.playMoveStart();
-        GnuBackgammon.Instance.nativeFunctions.gserviceOpenLeaderboards();
-      }
-    });
-    achievements = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("achievements")));
-    achievements.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.snd.playMoveStart();
-        GnuBackgammon.Instance.nativeFunctions.gserviceOpenAchievements();
-      }
-    });
-
-    gplus = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("gplus")));
-    twitter = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("twitter")));
-    facebook = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("facebook")));
-
-    gplus.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.snd.playMoveStart();
-        GnuBackgammon.Instance.nativeFunctions.openURL("https://plus.google.com/104812306723791936806/posts");
-      }
-    });
-    twitter.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.snd.playMoveStart();
-        GnuBackgammon.Instance.nativeFunctions.openURL("twitter://user?screen_name=alcamobile", "http://mobile.twitter.com/alcamobile");
-      }
-    });
-    facebook.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.snd.playMoveStart();
-        GnuBackgammon.Instance.nativeFunctions.openURL("fb://page/145621258977312", "https://m.facebook.com/BackgammonMobile");
-      }
-    });
-
-    buttonGroup = new Table();
-    buttonGroup.setWidth(gplus.getWidth());
-    buttonGroup.setHeight(gplus.getHeight() * 6);
-    buttonGroup.add(achievements).width(gplus.getWidth()).height(gplus.getHeight()).fill();
-    buttonGroup.row().spaceTop(0);
-    buttonGroup.add(scoreboards).width(gplus.getWidth()).height(gplus.getHeight()).fill();
-    buttonGroup.row().spaceTop(gplus.getHeight() / 2);
-    buttonGroup.add(gplus).width(gplus.getWidth()).height(gplus.getHeight()).fill();
-    buttonGroup.row().spaceTop(0);
-    buttonGroup.add(twitter).width(gplus.getWidth()).height(gplus.getHeight()).fill();
-    buttonGroup.row().spaceTop(0);
-    buttonGroup.add(facebook).width(facebook.getWidth()).height(facebook.getHeight()).fill();
-    buttonGroup.setPosition(0, -stage.getHeight());
-    stage.addActor(buttonGroup);
   }
 
 
@@ -277,7 +224,6 @@ public class MainMenuScreen extends BaseScreen {
 
   public void redraw() {
     createMenu();
-    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo(0, (stage.getHeight() - buttonGroup.getHeight()) / 2, 0.2f))));
     g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth() - g.getWidth()) / 2, (stage.getHeight() - g.getHeight()) / 2, 0.2f))));
   }
 
@@ -287,13 +233,11 @@ public class MainMenuScreen extends BaseScreen {
     super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
-    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo(0, (stage.getHeight() - buttonGroup.getHeight()) / 2, 0.2f))));
     g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth() - g.getWidth()) / 2, (stage.getHeight() - g.getHeight()) / 2, 0.2f))));
   }
 
   @Override
   public void fadeOut() {
-    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(0.2f), Actions.moveTo(0, -stage.getHeight(), 0.2f))));
     g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(0.2f), Actions.moveTo(-stage.getWidth(), (stage.getHeight() - g.getHeight()) / 2, 0.2f))));
   }
 
