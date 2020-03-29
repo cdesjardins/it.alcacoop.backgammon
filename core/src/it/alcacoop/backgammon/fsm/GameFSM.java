@@ -48,7 +48,6 @@ import it.alcacoop.backgammon.utils.ELORatingManager;
 public class GameFSM extends BaseFSM implements Context {
 
   private Board board;
-  public State currentState;
   public static boolean skip_stats = false;
 
 
@@ -381,10 +380,11 @@ public class GameFSM extends BaseFSM implements Context {
           if (MatchState.fMove == 1)
             ctx.state(States.HUMAN_TURN);
           else {
-            if (MatchState.matchType == 0)
+            if (MatchState.matchType == 0) {
               ctx.state(States.CPU_TURN);
-            else
+            } else {
               ctx.state(States.HUMAN_TURN);
+            }
           }
 
           ctx.board().switchTurn();

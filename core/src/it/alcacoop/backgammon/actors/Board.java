@@ -91,6 +91,7 @@ public class Board extends Group {
 
   public TextButton rollBtn;
   public TextButton doubleBtn;
+  private TextButton undoBtn;
 
   private Label ns[];
 
@@ -187,6 +188,19 @@ public class Board extends Group {
     rollBtn.setX(board.getX() + GnuBackgammon.Instance.jp.asFloat("dice0", 0) - rollBtn.getWidth() / 2);
     rollBtn.setY(board.getY() + boardbg.getHeight() / 2 - rollBtn.getHeight() / 2);
 
+    undoBtn = new TextButton("Undo", ts);
+    undoBtn.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        if (undoBtn.isDisabled() == false) {
+          undoMove();
+        }
+      }
+    });
+    undoBtn.setX(board.getX() + jp.asFloat("pos_bo", 0) - undoBtn.getWidth() / 2);
+    undoBtn.setY(board.getY() + boardbg.getHeight() / 2 - undoBtn.getHeight() / 2);
+    addActor(undoBtn);
+    setUndoBtnState(true);
 
     doubleBtn = new TextButton("Double", ts);
     doubleBtn.addListener(new ClickListener() {
@@ -215,7 +229,6 @@ public class Board extends Group {
     for (int i = 0; i < 24; i++)
       ns[i] = new Label((i + 1) + "", stl);
   }
-
 
   public Vector2 getBoardCoord(int color, int x, int y) {
     float offset = checkers[1][1].getWidth()/2;
@@ -594,6 +607,24 @@ public class Board extends Group {
     }
   }
 
+  private void setUndoBtnState(boolean isDisabled) {
+    if (isDisabled == true) {
+      undoBtn.setDisabled(true);
+      undoBtn.setColor(1, 1, 1, 0.4f);
+    } else {
+      undoBtn.setDisabled(false);
+      undoBtn.setColor(1, 1, 1, 1);
+    }
+  }
+  private void setUndoBtnState() {
+    GnuBackgammon.out.println("Set undo " + playedMoves.size() + " state: " + GnuBackgammon.fsm.state());
+    if ((((MatchState.matchType == 0) && (MatchState.fMove == 1)) || ((MatchState.matchType >= 2) && (MatchState.fMove == 1))) || (playedMoves.size() == 0)) {
+      setUndoBtnState(true);
+    } else {
+      setUndoBtnState(false);
+    }
+  }
+
   public void switchTurn() {
     playedMoves.clear();
     MatchState.SwitchTurn();
@@ -656,6 +687,7 @@ public class Board extends Group {
 
   public void updatePInfo() {
     GnuBackgammon.Instance.gameScreen.updatePInfo();
+    setUndoBtnState();
   }
 
   @Override
